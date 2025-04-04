@@ -136,6 +136,56 @@
                 flex-direction: column;
             }
         }
+
+        /* hero section */
+
+            /* Hero Section */
+            .hero {
+            background: url('https://source.unsplash.com/1600x900/?travel,beach') center/cover no-repeat;
+            height: 85vh;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            flex-direction: column;
+            position: relative;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+        }
+        .hero p {
+            font-size: 1.5rem;
+            max-width: 600px;
+        }
+        .hero .btn {
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            padding: 12px 30px;
+            font-size: 1.3rem;
+            border-radius: 8px;
+            color: white;
+            transition: transform 0.3s;
+        }
+        .hero .btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Featured Destinations */
+        .featured-section {
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .featured-card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out;
+        }
+        .featured-card:hover {
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
@@ -191,6 +241,50 @@
             <button>
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="hero">
+    <h1>Discover Your Next Adventure</h1>
+    <p>Unforgettable experiences await you. Explore the world with ease.</p>
+    <a href="#" class="btn">Start Exploring</a>
+</div>
+
+<!-- Featured Destinations -->
+<div class="container featured-section">
+    <h2 class="mb-5">Featured Destinations</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card featured-card">
+                <img src="https://source.unsplash.com/400x300/?paris" class="card-img-top" alt="Paris">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Paris, France</h5>
+                    <p class="card-text">The city of love, history, and stunning architecture.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card featured-card">
+                <img src="https://source.unsplash.com/400x300/?bali" class="card-img-top" alt="Bali">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Bali, Indonesia</h5>
+                    <p class="card-text">Tropical paradise with breathtaking beaches and culture.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card featured-card">
+                <img src="https://source.unsplash.com/400x300/?newyork" class="card-img-top" alt="New York">
+                <div class="card-body text-center">
+                    <h5 class="card-title">New York, USA</h5>
+                    <p class="card-text">The city that never sleeps, full of excitement and wonder.</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
