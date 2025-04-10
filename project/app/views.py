@@ -58,3 +58,11 @@ def signup(request):
             return redirect('signin')  
 
     return render(request, "signup.html")
+
+
+
+def userlogout(request):
+    request.session.flush()
+    return render(request, 'home.html')
+
+
