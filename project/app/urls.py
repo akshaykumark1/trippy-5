@@ -9,8 +9,12 @@ urlpatterns = [
     path('',views.signin,name='signin'),
     path('signup',views.signup,name='signup'),
     path('log-out',views.userlogout,name='userlogout'),
-    path('destinations/',views.destination_list, name='destination_list'),
-    path('viewdetail/<int:id>/', views.viewdetail, name='viewdetail'),
+    path('destinations',views.destinations,name='destinations'),
+    path('packages',views.packages,name='packages'),
+    path('aboutus',views.aboutus,name='aboutus'),
+    path('booknow',views.booknow,name='booknow'),
+
+   
 
 ]
 if settings.DEBUG:

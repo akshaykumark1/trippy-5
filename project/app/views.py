@@ -66,11 +66,12 @@ def userlogout(request):
     return render(request, 'home.html')
 
 
-def destination_list(request):
-    destinations = Destination.objects.all()
-    return render(request, 'destination_list.html', {'destinations': destinations})
+def destinations(request):
+    return render(request,'destinations.html')
+def packages(request):
+    return render(request,'packages.html')
+def aboutus(request):
+    return render(request,'aboutus.html')
 
-
-def viewdetail(request, id):
-    destination = Destination.objects.get(id=id)
-    return render(request, 'viewdetail.html', {'destination': destination})
+def booknow(request):
+    return render(request,'booknow.html')    
