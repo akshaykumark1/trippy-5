@@ -11,7 +11,8 @@ from django.contrib.auth.models import User
 
 
 def home(request):
-    return render(request,'home.html')
+    destinations = Destination.objects.all()
+    return render(request,'home.html',{'destinations': destinations})
     
 def signin(request):
     if request.user.is_authenticated:
@@ -66,7 +67,9 @@ def userlogout(request):
     return render(request, 'home.html')
 
 
-def destinations(request):
+def destinations(request,id):
+ 
+
     return render(request,'destinations.html')
 def packages(request):
     return render(request,'packages.html')
@@ -75,3 +78,9 @@ def aboutus(request):
 
 def booknow(request):
     return render(request,'booknow.html')    
+
+def viewdetails(request,id):
+    destination = Destination.objects.get(id=id)
+    return render(request,'viewdetails.html',{'destination': destination})
+def bookings(request):
+    return render(request,'bookings.html')
