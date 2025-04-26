@@ -39,7 +39,7 @@ class Customer(models.Model):
 
 class Booking(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    # travel_package = models.ForeignKey(travelPackage, on_delete=models.CASCADE)
+    travel_package = models.ForeignKey(Package, on_delete=models.CASCADE)
     booking_date = models.DateTimeField(auto_now_add=True)
     number_of_people = models.PositiveIntegerField()
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -55,7 +55,6 @@ class Booking(models.Model):
 
 class Review(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    # travel_package = models.ForeignKey(travelPackage, on_delete=models.CASCADE)
     rating = models.IntegerField()
     comment = models.TextField()
     date_posted = models.DateTimeField(auto_now_add=True)

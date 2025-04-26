@@ -15,7 +15,16 @@ urlpatterns = [
     path('aboutus', views.aboutus, name='aboutus'),
     path('booknow', views.booknow, name='booknow'),
     path('viewdetails/<int:id>/', views.viewdetails, name='viewdetails'),  # Fix for the 'viewdetails' pattern
-    path('bookings', views.bookings, name='bookings'),
+    path('bookings/<id>', views.bookings, name='bookings'),
+    path(' /<id>', views.booking_review, name='booking_revi'),
+    path('profile/create/', views.profile_create, name='profile_create'),  # Add this line
+    path('confirm/<id>', views.confirm_booking, name='confirm_booking'),
+    path('my_bookings', views.my_bookings, name='my_bookings'),
+
+    ####################################################################################################3
+    path('admin', views.admin, name='admin'),
+
+
 ]
 
 if settings.DEBUG:

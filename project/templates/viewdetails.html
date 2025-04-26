@@ -220,18 +220,18 @@
 
 <!-- Hero -->
 <section class="container py-4 mt-5 pt-5">
-  <img src="{{ destination.image.url }}" class="w-100 hero-img mb-4" alt="Destination Image">
+  <img src="{{ dest.image.url }}" class="w-100 hero-img mb-4" alt="Destination Image">
   <h1 class="display-5 fw-bold">Explore the Beauty of Bali</h1>
-  <p class="text-muted">{{ destination.name }} | {{ destination.place }}</p>
+  <p class="text-muted">{{ dest.name }} | {{ dest.place }}</p>
 </section>
 
 <!-- Main Content -->
 <section class="container py-4">
-  <div class="row g-4">
+  <div class="row g-4" style="background-color: rgba(255, 255, 255, 0.7);">
     <!-- Main Description -->
     <div class="col-lg-8">
       <h4>About the Destination</h4>
-      <p>{{ destination.description }}</p>
+      <p>{{ dest.description }}</p>
       
       <h5 class="mt-4">Highlights</h5>
       <ul class="list-unstyled row row-cols-2 g-2">
@@ -243,8 +243,8 @@
 
       <h5 class="mt-5">Gallery</h5>
       <div class="row g-2">
-        <div class="col-6 col-md-4"><img src="https://via.placeholder.com/300" class="img-fluid rounded" alt="Gallery Image"></div>
-        <div class="col-6 col-md-4"><img src="https://via.placeholder.com/300" class="img-fluid rounded" alt="Gallery Image"></div>
+        <div class="col-6 col-md-4"><img src="{{ dest.image.url }}" class="img-fluid rounded" alt="Gallery Image"></div>
+        <div class="col-6 col-md-4"><img src="{{  dest.image.url }}" class="img-fluid rounded" alt="Gallery Image"></div>
         <div class="col-6 col-md-4"><img src="https://via.placeholder.com/300" class="img-fluid rounded" alt="Gallery Image"></div>
       </div>
     </div>
@@ -252,17 +252,34 @@
     <!-- Sidebar -->
     <div class="col-lg-4">
       <div class="card shadow-sm rounded-4 p-4">
-        <h5 class="fw-bold mb-3">Plan Your Trip</h5>
-        <p><strong>Price:</strong> ₹45,000 per person</p>
-        <p><strong>Duration:</strong> 6 Days / 5 Nights</p>
-        <p><strong>Available:</strong> All Year Round</p>
-        <a href="{% url 'bookings' %}"><button class="btn btn-primary w-100 mt-3">Book Now</button></a>
+        {% if package %}
+          {% for pack in package %}
+            <p><strong>Price:</strong> ₹{{ pack.price }} per person</p>
+            <p><strong>Duration:</strong> {{ pack.duration_days }} Days</p>
+            <p><strong>Available:</strong> {{ pack.start_date|date:"M d, Y" }} to {{ pack.end_date|date:"M d, Y" }}</p>
+      
+            <a href="{% url 'bookings' pack.id %}">
+              <button class="btn btn-primary w-100 mt-3">Book Now</button>
+            </a>
+      
+            {% if not forloop.last %}
+              <hr class="my-4">
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          <p class="text-muted">No packages available for this destination right now.</p>
+        {% endif %}
       </div>
+      
 
      
     </div>
   </div>
 </section>
+
+
+
+
 
 <footer class="text-white pt-5 pb-4" style="background: linear-gradient(to right, #1f4037, #99f2c8);">
   <div class="container text-center text-md-start">
