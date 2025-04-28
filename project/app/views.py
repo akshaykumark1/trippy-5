@@ -205,8 +205,10 @@ def my_bookings(request):
     return render(request, 'my_bookings.html', {'bookings': bookings})
 
 
-def destinations(request):
-    return render(request,'destinations.html')
+
+
+
+
 def packages(request):
     return render(request,'packages.html')
 def aboutus(request):
@@ -218,3 +220,12 @@ def booknow(request):
 
 def admin(request):
     return render(request,'admin/admin.html')
+
+
+
+
+def cancel_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    booking.status = 'Cancelled'
+    booking.save()
+    return redirect('my_bookings')
