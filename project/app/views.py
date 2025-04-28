@@ -64,15 +64,23 @@ def userlogout(request):
 # ---------------------------------------------------------------------
 
 def home(request):
-    destinations = Destination.objects.all()[:3]
-    return render(request,'home.html',{'destinations': destinations})
+    packages = Package.objects.all()[:6]  # Show latest 6 packages on homepage
+    reviews = Review.objects.all()  # All reviews for testimonials
+    context = {
+    'Packages': packages,
+    'Reviews': reviews,
+    }
+    return render(request,'home.html',context)
 
-def viewdetails(request,id):
-    dest = Destination.objects.get(id=id)
-    package = Package.objects.filter(destination=dest)
-    print(package)
-    return render(request,'viewdetails.html',{'dest': dest,'package': package}) 
-
+def viewpackagedetails(request, id):
+    package = get_object_or_404(Package, id=id)
+    # Get related packages (you can customize this query as needed)
+    related_packages = Package.objects.exclude(id=id).order_by('-start_date')[:3]
+    context = {
+        'package': package,
+        'related_packages': related_packages
+    }
+    return render(request, 'viewpackagedetails.html', context)
 def bookings(request, id):  # id = Package id
     package = get_object_or_404(Package, id=id)
 
@@ -205,9 +213,75 @@ def my_bookings(request):
     return render(request, 'my_bookings.html', {'bookings': bookings})
 
 
+def add_vehicle_admin(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        package_id = request.POST.get('package')
+        price = request.POST.get('price')
+        
+        try:
+            package = Package.objects.get(id=package_id)
+            vehicle = Vehicle(name=name, package=package, price=price)
+            vehicle.save()
+            messages.success(request, 'Vehicle added successfully!')
+            return redirect('/admin/vehicles/')  # Redirect to vehicles list
+        except Exception as e:
+            messages.error(request, f'Error adding vehicle: {str(e)}')
+            
+    packages = Package.objects.all()
+    context = {
+        'packages': packages,
+    }
+    return render(request, 'add_vehicle_admin.html', context)
 
 
 
+def addpackages(request):
+    if request.method == 'POST':
+        try:
+            # Extract form data
+            title = request.POST.get('title')
+            duration_days = request.POST.get('duration_days')
+            description = request.POST.get('description')
+            included = request.POST.get('included')
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            
+            # Create new package object
+            package = Package(
+                title=title,
+                duration_days=duration_days,
+                description=description,
+                included=included,
+                start_date=start_date,
+                end_date=end_date
+            )
+            
+            # Handle image uploads
+            if 'image' in request.FILES:
+                package.image = request.FILES['image']
+            
+            if 'image2' in request.FILES:
+                package.image2 = request.FILES['image2']
+            
+            if 'image3' in request.FILES:
+                package.image3 = request.FILES['image3']
+            
+            # Save package to database
+            package.save()
+            
+            messages.success(request, f'Package "{title}" added successfully!')
+            return redirect('/admin/packages/')  # Redirect to packages list
+        except Exception as e:
+            messages.error(request, f'Error adding package: {str(e)}')
+    
+    return render(request, 'admin/addpackages.html')
+
+
+
+def vehicles(request):
+    vehicles = Vehicle.objects.all()
+    return render(request, 'vehicles.html', {'vehicles': vehicles})
 
 def packages(request):
     return render(request,'packages.html')

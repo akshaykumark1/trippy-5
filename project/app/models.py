@@ -3,29 +3,28 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Destination(models.Model):
-    name = models.CharField(max_length=100)
-    place = models.CharField(max_length=100)
-    description = models.TextField()
-    image = models.ImageField(upload_to='destinations/')
 
-    def __str__(self):
-        return self.name
 
 class Package(models.Model):
     title = models.CharField(max_length=200)
-    destination = models.ForeignKey(Destination, on_delete=models.CASCADE)
     duration_days = models.IntegerField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField()
     included = models.TextField()
     start_date = models.DateField()
     end_date = models.DateField()
     image = models.ImageField(upload_to='packages/')
+    image2 = models.ImageField(upload_to='packages/',null=False,default='')
+    image3 = models.ImageField(upload_to='packages/',null=False,default='')
+
 
     def __str__(self):
-        return f"{self.title} - {self.destination.name}"
-
+        return f"{self.title} "
+    
+class Vehicle(models.Model):
+    name=models.CharField(max_length=200)
+    price=models.IntegerField()
+    package=models.ForeignKey(Package,on_delete=models.CASCADE)
+    Description = models.TextField()
 
 
 class Customer(models.Model):
