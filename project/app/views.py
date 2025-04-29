@@ -303,3 +303,26 @@ def cancel_booking(request, booking_id):
     booking.status = 'Cancelled'
     booking.save()
     return redirect('my_bookings')
+
+
+    ######################################admin##########################################
+
+def booking_list(request):
+    bookings = Booking.objects.select_related('customer', 'travel_package')
+    return render(request, 'adminpages/booking_list.html', {'bookings': bookings})
+
+def customer_list(request):
+    customers = Customer.objects.select_related('user')
+    return render(request, 'adminpages/customer_list.html', {'customers': customers})
+
+def package_list(request):
+    packages = Package.objects.all()
+    return render(request, 'adminpages/package_list.html', {'packages': packages})
+
+def review_list(request):
+    reviews = Review.objects.select_related('customer')
+    return render(request, 'adminpages/review_list.html', {'reviews': reviews})
+
+def vehicle_list(request):
+    vehicles = Vehicle.objects.select_related('package')
+    return render(request, 'adminpages/vehicle_list.html', {'vehicles': vehicles})

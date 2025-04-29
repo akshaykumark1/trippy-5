@@ -21,10 +21,19 @@ urlpatterns = [
     path('my_bookings', views.my_bookings, name='my_bookings'),
 
     ####################################################################################################3
-    path('admi',views.admin, name='admin'),
-    path('cancel-booking/<int:booking_id>/', views.cancel_booking, name='cancel_booking'),
-    path('addpackages/',views.addpackages,name='addpackages'),
-    path('vehicles/',views.vehicles,name='vehicles'),
+    path('admin',views.admin, name='admin'),
+    # path('cancel-booking/<int:booking_id>/', views.cancel_booking, name='cancel_booking'),
+    # path('addpackages/',views.addpackages,name='addpackages'),
+    # path('vehicles/',views.vehicles,name='vehicles'),
+
+
+
+
+    path('bookings/', views.booking_list, name='booking_list'),
+    path('customers/', views.customer_list, name='customer_list'),
+    path('packages/', views.package_list, name='package_list'),
+    path('reviews/', views.review_list, name='review_list'),
+    path('vehicles/', views.vehicle_list, name='vehicle_list'),
 ]
 
     
