@@ -22,10 +22,10 @@ urlpatterns = [
 
     ####################################################################################################3
     path('admin',views.admin, name='admin'),
-    # path('cancel-booking/<int:booking_id>/', views.cancel_booking, name='cancel_booking'),
+    path('cancel-booking/<int:booking_id>/', views.cancel_booking, name='cancel_booking'),
     # path('addpackages/',views.addpackages,name='addpackages'),
-    # path('vehicles/',views.vehicles,name='vehicles'),
-
+    path('vehicles/',views.vehicles,name='vehicles'),
+    path('checkout/<int:package_id>/<int:vehicle_id>/', views.checkout, name='checkout'),
 
 
 

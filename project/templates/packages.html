@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -240,65 +241,30 @@
         </div>
     </nav>
 
-
-  <section class="py-5">
-    <div class="container">
-      <h2 class="section-title" data-aos="fade-up">Explore Our Travel Packages</h2>
-      <div class="row g-4">
-
-        <!-- Package 1 -->
-        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
-          <div class="card package-card h-100">
-            <img src="https://source.unsplash.com/400x300/?beach,resort" class="card-img-top package-img" alt="Beach Resort">
-            <div class="card-body">
-              <h5 class="card-title">Tropical Escape - Bali</h5>
-              <p class="card-text">5 nights stay in a beachfront villa with daily breakfast and island tours.</p>
-              <div class="d-flex justify-content-between align-items-center mt-3">
-                <span class="price-tag">$899</span>
-                <span class="stars">★★★★★</span>
+    <section class="py-5">
+      <div class="container">
+        <h2 class="section-title" data-aos="fade-up">Explore Our Travel Packages</h2>
+        <div class="row g-4">
+          {% for package in packages %}
+          <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00">
+            <div class="card package-card h-100">
+              <img src="{{ package.image.url }}" class="card-img-top package-img" alt="{{ package.title }}">
+              <div class="card-body">
+                <h5 class="card-title">{{ package.title }}</h5>
+                <p class="card-text">{{ package.description|truncatewords:20 }}</p>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                  <span class="price-tag">${{ package.id|add:699 }}</span> <!-- Fake price logic -->
+                  <span class="stars">★★★★☆</span>
+                </div>
+                <a href="#" class="btn btn-book w-100 mt-3">Book Now</a>
               </div>
-              <a href="#" class="btn btn-book w-100 mt-3">Book Now</a>
             </div>
           </div>
+          {% endfor %}
         </div>
-
-        <!-- Package 2 -->
-        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
-          <div class="card package-card h-100">
-            <img src="https://source.unsplash.com/400x300/?mountains,lodge" class="card-img-top package-img" alt="Mountain Retreat">
-            <div class="card-body">
-              <h5 class="card-title">Alpine Adventure - Switzerland</h5>
-              <p class="card-text">7 days exploring the Swiss Alps with guided hikes and luxury stays.</p>
-              <div class="d-flex justify-content-between align-items-center mt-3">
-                <span class="price-tag">$1299</span>
-                <span class="stars">★★★★☆</span>
-              </div>
-              <a href="#" class="btn btn-book w-100 mt-3">Book Now</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Package 3 -->
-        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
-          <div class="card package-card h-100">
-            <img src="https://source.unsplash.com/400x300/?city,tour" class="card-img-top package-img" alt="City Tour">
-            <div class="card-body">
-              <h5 class="card-title">Urban Explorer - New York</h5>
-              <p class="card-text">3-day city tour covering iconic spots with private guides and luxury hotel.</p>
-              <div class="d-flex justify-content-between align-items-center mt-3">
-                <span class="price-tag">$749</span>
-                <span class="stars">★★★★☆</span>
-              </div>
-              <a href="#" class="btn btn-book w-100 mt-3">Book Now</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Add more packages as needed -->
-
       </div>
-    </div>
-  </section>
+    </section>
+    
 
 
 

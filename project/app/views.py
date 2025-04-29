@@ -8,6 +8,9 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
+from django.contrib import messages
+from datetime import datetime
+
 
 
       
@@ -64,7 +67,7 @@ def userlogout(request):
 # ---------------------------------------------------------------------
 
 def home(request):
-    packages = Package.objects.all()[:6]  # Show latest 6 packages on homepage
+    packages = Package.objects.all()[:3]  # Show latest 6 packages on homepage
     reviews = Review.objects.all()  # All reviews for testimonials
     context = {
     'Packages': packages,
@@ -299,30 +302,59 @@ def admin(request):
 
 
 def cancel_booking(request, booking_id):
-    booking = get_object_or_404(Booking, id=booking_id)
+    booking = get_object_or_404(Booking, id=booking_id, customer__user=request.user)
     booking.status = 'Cancelled'
     booking.save()
     return redirect('my_bookings')
-
 
     ######################################admin##########################################
 
 def booking_list(request):
     bookings = Booking.objects.select_related('customer', 'travel_package')
-    return render(request, 'adminpages/booking_list.html', {'bookings': bookings})
+    return render(request, 'admin/booking_list.html', {'bookings': bookings})
 
 def customer_list(request):
     customers = Customer.objects.select_related('user')
-    return render(request, 'adminpages/customer_list.html', {'customers': customers})
+    return render(request, 'admin/customer_list.html', {'customers': customers})
 
 def package_list(request):
     packages = Package.objects.all()
-    return render(request, 'adminpages/package_list.html', {'packages': packages})
+    return render(request, 'admin/package_list.html', {'packages': packages})
 
 def review_list(request):
     reviews = Review.objects.select_related('customer')
-    return render(request, 'adminpages/review_list.html', {'reviews': reviews})
+    return render(request, 'admin/review_list.html', {'reviews': reviews})
 
 def vehicle_list(request):
     vehicles = Vehicle.objects.select_related('package')
-    return render(request, 'adminpages/vehicle_list.html', {'vehicles': vehicles})
+    return render(request, 'admin/vehicle_list.html', {'vehicles': vehicles})
+
+
+def checkout(request, package_id, vehicle_id):
+    package = get_object_or_404(Package, id=package_id)
+    vehicle = get_object_or_404(Vehicle, id=vehicle_id)
+    return render(request, 'checkout.html', {
+        'package': package,
+        'vehicle': vehicle
+    })
+def confirm_booking(request):
+    if request.method == 'POST':
+        package_id = request.POST.get('package_id')
+        vehicle_id = request.POST.get('vehicle_id')
+        total_price = request.POST.get('total_price')
+        people_count = request.POST.get('people_count')
+
+        package = get_object_or_404(Package, id=package_id)
+        vehicle = get_object_or_404(Vehicle, id=vehicle_id)
+        customer = get_object_or_404(Customer, user=request.user)
+
+        booking = Booking.objects.create(
+            customer=customer,
+            travel_package=package,
+            number_of_people=people_count,
+            vehicle=vehicle,
+            total_price=total_price,
+            status='Pending'
+        )
+        return redirect('booking_success')  # create this template/view
+    return redirect('home')

@@ -25,6 +25,7 @@ class Vehicle(models.Model):
     price=models.IntegerField()
     package=models.ForeignKey(Package,on_delete=models.CASCADE)
     Description = models.TextField()
+    image = models.ImageField(upload_to='vehicles/')
 
 
 class Customer(models.Model):
