@@ -34,6 +34,12 @@ urlpatterns = [
     path('packages/', views.package_list, name='package_list'),
     path('reviews/', views.review_list, name='review_list'),
     path('vehicles/', views.vehicle_list, name='vehicle_list'),
+
+    #####payments###
+    path('book/<int:package_id>/', views.create_booking, name='create_booking'),
+    path('payment-success/<int:booking_id>/', views.payment_success, name='payment_success'), 
+    path('view_bookings', views.view_bookings, name='view_bookings'),
+       
 ]
 
     

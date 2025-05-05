@@ -48,15 +48,15 @@
                 <hr>
 
                 <h5>Total Price: ₹<span id="total-price">0</span></h5>
-                <form method="POST" action="#">
+                <form method="POST" action="">
                     {% csrf_token %}
                     <input type="hidden" name="package_id" value="{{ package.id }}">
                     <input type="hidden" name="vehicle_id" value="{{ vehicle.id }}">
                     <input type="hidden" name="total_price" id="total_price_input" value="">
-
                     <input type="hidden" name="people_count" id="people_input" value="1">
                     <button type="submit" class="btn btn-success mt-3 w-100 rounded-pill">Confirm Booking</button>
                 </form>
+                
             </div>
         </div>
 

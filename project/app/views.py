@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.contrib import messages
 from datetime import datetime
+import razorpay
 
 
 
@@ -330,13 +331,32 @@ def vehicle_list(request):
     return render(request, 'admin/vehicle_list.html', {'vehicles': vehicles})
 
 
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Package, Vehicle, Booking, Customer
+from django.contrib.auth.decorators import login_required
+
+@login_required
 def checkout(request, package_id, vehicle_id):
     package = get_object_or_404(Package, id=package_id)
     vehicle = get_object_or_404(Vehicle, id=vehicle_id)
-    return render(request, 'checkout.html', {
-        'package': package,
-        'vehicle': vehicle
-    })
+    customer = get_object_or_404(Customer, user=request.user)
+
+    if request.method == 'POST':
+        people = int(request.POST.get('people_count'))
+        total_price = float(request.POST.get('total_price'))
+
+        booking = Booking.objects.create(
+            customer=customer,
+            travel_package=package,
+            number_of_people=people,
+            total_price=total_price,
+            status='Confirmed'
+        )
+
+        return redirect('payment_success', booking_id=booking.id)
+
+    return render(request, 'checkout.html', {'package': package, 'vehicle': vehicle})
+
 def confirm_booking(request):
     if request.method == 'POST':
         package_id = request.POST.get('package_id')
@@ -356,5 +376,60 @@ def confirm_booking(request):
             total_price=total_price,
             status='Pending'
         )
-        return redirect('booking_success')  # create this template/view
+        return redirect('payment_success')  # create this template/view
     return redirect('home')
+
+
+
+@login_required
+def create_booking(request, package_id):
+    package = get_object_or_404(Package, id=package_id)
+    customer = get_object_or_404(Customer, user=request.user)
+
+    if request.method == 'POST':
+        persons = int(request.POST.get('number_of_people'))
+
+        # Example price logic (you can adjust this)
+        base_price_per_person = 1000  # or use dynamic pricing if needed
+        total_price = base_price_per_person * persons
+
+        # Create Razorpay order
+        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+        payment = client.order.create({
+            'amount': int(total_price * 100),  # amount in paise
+            'currency': 'INR',
+            'payment_capture': 1
+        })
+
+        # Save booking (not paid yet)
+        booking = Booking.objects.create(
+            customer=customer,
+            travel_package=package,
+            number_of_people=persons,
+            total_price=total_price,
+            status='Pending'
+        )
+
+        return render(request, 'payment.html', {
+            'booking': booking,
+            'order_id': payment['id'],
+            'razorpay_key': settings.RAZORPAY_KEY_ID,
+            'amount': total_price * 100,  # for Razorpay JS
+        })
+
+    return render(request, 'booking_form.html', {'package': package})
+
+@csrf_exempt
+def payment_success(request, booking_id):
+    booking = Booking.objects.get(id=booking_id)
+    booking.is_paid = True
+    booking.status = 'Confirmed'
+    booking.payment_id = request.POST.get('razorpay_payment_id')
+    booking.save()
+    return render(request, 'booking_confirmation.html', {'booking': booking})
+
+@login_required
+def view_bookings(request):
+    customer = Customer.objects.get(user=request.user)
+    bookings = Booking.objects.filter(customer=customer).order_by('-booking_date')
+    return render(request, 'view_bookings.html', {'bookings': bookings})

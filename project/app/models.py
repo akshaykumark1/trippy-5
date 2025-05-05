@@ -48,9 +48,12 @@ class Booking(models.Model):
         ('Confirmed', 'Confirmed'),
         ('Cancelled', 'Cancelled'),
     ])
+    payment_id = models.CharField(max_length=100, blank=True, null=True)
+    is_paid = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Booking by {self.customer.user.username} for {self.travel_package.title}"
+
 
 
 class Review(models.Model):

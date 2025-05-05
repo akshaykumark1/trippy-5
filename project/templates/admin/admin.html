@@ -88,10 +88,10 @@
     <div class="admin-header">
       <h2 class="fw-bold">Trippify Admin Dashboard</h2>
       <div class="header-btns">
-        <a href="/" class="btn btn-outline-secondary">
+        <a href="{%  url 'home' %}" class="btn btn-outline-secondary">
           <i class="bi bi-box-arrow-up-right icon-space"></i>View Site
         </a>
-        <a href="/logout" class="btn btn-outline-danger">
+        <a href="{% url 'home'%}" class="btn btn-outline-danger">
           <i class="bi bi-box-arrow-right icon-space"></i>Logout
         </a>
       </div>
