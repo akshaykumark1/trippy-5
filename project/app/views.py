@@ -68,13 +68,70 @@ def userlogout(request):
 # ---------------------------------------------------------------------
 
 def home(request):
+    vehicles = Vehicle.objects.all()
     packages = Package.objects.all()[:3]  # Show latest 6 packages on homepage
     reviews = Review.objects.all()  # All reviews for testimonials
     context = {
     'Packages': packages,
     'Reviews': reviews,
+    'vehicles': vehicles,
     }
     return render(request,'home.html',context)
+
+
+def add_package(request):
+    if request.method == 'POST':
+        title = request.POST['title']
+        duration_days = request.POST['duration_days']
+        description = request.POST['description']
+        included = request.POST['included']
+        start_date = request.POST['start_date']
+        end_date = request.POST['end_date']
+        image = request.FILES.get('image')
+        image2 = request.FILES.get('image2')
+        image3 = request.FILES.get('image3')
+
+        Package.objects.create(
+            title=title,
+            duration_days=duration_days,
+            description=description,
+            included=included,
+            start_date=start_date,
+            end_date=end_date,
+            image=image,
+            image2=image2,
+            image3=image3,
+        )
+        return redirect('admin')  
+
+    return render(request, 'admin/add_package.html')
+
+def update_package(request, id):
+    package = get_object_or_404(Package, id=id)
+
+    if request.method == 'POST':
+        package.title = request.POST['title']
+        package.duration_days = request.POST['duration_days']
+        package.description = request.POST['description']
+        package.included = request.POST['included']
+        package.start_date = request.POST['start_date']
+        package.end_date = request.POST['end_date']
+
+        if 'image' in request.FILES:
+            package.image = request.FILES['image']
+        if 'image2' in request.FILES:
+            package.image2 = request.FILES['image2']
+        if 'image3' in request.FILES:
+            package.image3 = request.FILES['image3']
+
+        package.save()
+        return redirect('admin')
+
+    return render(request, 'admin/update_package.html', {'package': package})
+
+
+
+
 
 def viewpackagedetails(request, id):
     package = get_object_or_404(Package, id=id)
@@ -240,46 +297,46 @@ def add_vehicle_admin(request):
 
 
 
-def addpackages(request):
-    if request.method == 'POST':
-        try:
-            # Extract form data
-            title = request.POST.get('title')
-            duration_days = request.POST.get('duration_days')
-            description = request.POST.get('description')
-            included = request.POST.get('included')
-            start_date = request.POST.get('start_date')
-            end_date = request.POST.get('end_date')
+# def addpackages(request):
+#     if request.method == 'POST':
+#         try:
+#             # Extract form data
+#             title = request.POST.get('title')
+#             duration_days = request.POST.get('duration_days')
+#             description = request.POST.get('description')
+#             included = request.POST.get('included')
+#             start_date = request.POST.get('start_date')
+#             end_date = request.POST.get('end_date')
             
-            # Create new package object
-            package = Package(
-                title=title,
-                duration_days=duration_days,
-                description=description,
-                included=included,
-                start_date=start_date,
-                end_date=end_date
-            )
+#             # Create new package object
+#             package = Package(
+#                 title=title,
+#                 duration_days=duration_days,
+#                 description=description,
+#                 included=included,
+#                 start_date=start_date,
+#                 end_date=end_date
+#             )
             
-            # Handle image uploads
-            if 'image' in request.FILES:
-                package.image = request.FILES['image']
+#             # Handle image uploads
+#             if 'image' in request.FILES:
+#                 package.image = request.FILES['image']
             
-            if 'image2' in request.FILES:
-                package.image2 = request.FILES['image2']
+#             if 'image2' in request.FILES:
+#                 package.image2 = request.FILES['image2']
             
-            if 'image3' in request.FILES:
-                package.image3 = request.FILES['image3']
+#             if 'image3' in request.FILES:
+#                 package.image3 = request.FILES['image3']
             
-            # Save package to database
-            package.save()
+#             # Save package to database
+#             package.save()
             
-            messages.success(request, f'Package "{title}" added successfully!')
-            return redirect('/admin/packages/')  # Redirect to packages list
-        except Exception as e:
-            messages.error(request, f'Error adding package: {str(e)}')
+#             messages.success(request, f'Package "{title}" added successfully!')
+#             return redirect('/admin/packages/')  # Redirect to packages list
+#         except Exception as e:
+#             messages.error(request, f'Error adding package: {str(e)}')
     
-    return render(request, 'admin/addpackages.html')
+#     return render(request, 'admin/addpackages.html')
 
 
 
@@ -288,7 +345,8 @@ def vehicles(request):
     return render(request, 'vehicles.html', {'vehicles': vehicles})
 
 def packages(request):
-    return render(request,'packages.html')
+    packages = Package.objects.all()
+    return render(request,'packages.html',{'packages':packages})
 def aboutus(request):
     return render(request,'aboutus.html')
 
@@ -331,9 +389,16 @@ def vehicle_list(request):
     return render(request, 'admin/vehicle_list.html', {'vehicles': vehicles})
 
 
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Package, Vehicle, Booking, Customer
-from django.contrib.auth.decorators import login_required
+def vehicle_list1(request):
+    vehicles = Vehicle.objects.select_related('package')
+    return render(request, 'admin/vehicle_list1.html', {'vehicles': vehicles})
+
+def delete_package(request, id):
+    package = get_object_or_404(Package, id=id)
+    package.delete()
+    return redirect('admin')  # change 'packages' to your package list view name
+
+
 
 @login_required
 def checkout(request, package_id, vehicle_id):

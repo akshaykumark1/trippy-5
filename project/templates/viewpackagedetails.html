@@ -17,12 +17,165 @@
             --light-color: #ecf0f1;
             --dark-color: #2c3e50;
         }
-        
-        body {
+        :root {
+    --primary-color: #ff6b6b;
+    --secondary-color: #5f27cd;
+    --light-color: #f9f9f9;
+    --dark-color: #222831;
+}
+
+body {
             font-family: 'Poppins', sans-serif;
             background-color: #f9f9f9;
             color: #333;
         }
+
+.navbar {
+    padding: 0.8rem 1rem;
+    background-color: rgba(255, 255, 255, 0);
+    transition: all 0.3s ease;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    letter-spacing: 1px;
+}
+
+.navbar-brand span {
+    color: var(--secondary-color);
+}
+
+.nav-item {
+    padding: 0 10px;
+    position: relative;
+}
+
+.nav-link {
+    color: var(--dark-color);
+    font-weight: 500;
+    font-size: 1rem;
+    transition: color 0.3s;
+    padding: 0.5rem 0.8rem;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--primary-color);
+}
+
+/* Animated underline effect */
+.nav-item::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    bottom: 0;
+    left: 10px;
+    transition: width 0.3s ease-in-out;
+}
+
+.nav-item:hover::after, .nav-item.active::after {
+    width: calc(100% - 20px);
+}
+
+/* User dropdown styling */
+.user-dropdown .dropdown-toggle::after {
+    display: none;
+}
+
+.user-dropdown .dropdown-menu {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+    min-width: 200px;
+    margin-top: 15px;
+}
+
+.user-dropdown .dropdown-item {
+    color: var(--dark-color);
+    font-weight: 500;
+    padding: 10px 20px;
+    transition: all 0.2s;
+}
+
+.user-dropdown .dropdown-item:hover {
+    background-color: rgba(255, 107, 107, 0.1);
+    color: var(--primary-color);
+}
+
+.user-dropdown .dropdown-item i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+/* User icon styling */
+.user-icon {
+    width: 36px;
+    height: 36px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.user-icon:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+/* Mobile menu toggle button styling */
+.navbar-toggler {
+    border: none;
+    padding: 0.25rem 0.5rem;
+}
+
+.navbar-toggler:focus {
+    box-shadow: none;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 107, 107, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Sticky navbar animation */
+.navbar.scrolled {
+    padding: 0.5rem 1rem;
+    background-color: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Book now button */
+.book-now-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50px;
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s;
+    border: 2px solid var(--primary-color);
+}
+
+.book-now-btn:hover {
+    background-color: transparent;
+    color: var(--primary-color);
+}
+
+/* For screens larger than 992px */
+@media (min-width: 992px) {
+    .navbar-expand-lg .navbar-nav .nav-link {
+        padding-right: 1rem;
+        padding-left: 1rem;
+    }
+}
+        
+        
         
         .hero-section {
             position: relative;
@@ -195,6 +348,57 @@
     </style>
 </head>
 <body>
+
+
+
+
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">𝕥𝕣𝕚𝕡𝕡𝕚𝕗𝕪</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                  {% if not user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="btn btn-gradient nav-link active" style="border-radius: 50px;" href="{% url 'signup' %}">Signup</a>
+                    </li>
+                    {% endif %}
+                   
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'packages' %}">Packages</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'my_bookings' %}">My Bookings</a>
+                  </li>
+                  
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'aboutus' %}">About Us</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item dropdown user-dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdownMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="user-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdownMenu">
+                           
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-envelope"></i> Contact us</a></li>
+                            <li><a class="dropdown-item" href="{% url 'userlogout' %}"><i class="fas fa-sign-out-alt"></i> Log out</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+                        <a href="" class="btn book-now-btn">Book Now</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    
     <!-- Hero Section -->
     <div class="hero-section d-flex align-items-center">
         <img src="{{ package.image.url }}" alt="{{ package.title }}" class="hero-img">

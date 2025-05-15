@@ -10,6 +10,10 @@ urlpatterns = [
     path('', views.signin, name='signin'),
     path('signup', views.signup, name='signup'),
     path('log-out', views.userlogout, name='userlogout'),
+    path('add_package/', views.add_package, name='add_package'),
+    path('update_package/<int:id>/', views.update_package, name='update_package'),
+
+
     path('packages', views.packages, name='packages'),
     path('aboutus', views.aboutus, name='aboutus'),
     path('booknow', views.booknow, name='booknow'),
@@ -19,13 +23,16 @@ urlpatterns = [
     path('profile/create/', views.profile_create, name='profile_create'),  # Add this line
     path('confirm/<id>', views.confirm_booking, name='confirm_booking'),
     path('my_bookings', views.my_bookings, name='my_bookings'),
+    path('vehicle_list1/', views.vehicle_list1, name='vehicle_list1'),
+
 
     ####################################################################################################3
     path('admin',views.admin, name='admin'),
     path('cancel-booking/<int:booking_id>/', views.cancel_booking, name='cancel_booking'),
-    # path('addpackages/',views.addpackages,name='addpackages'),
     path('vehicles/',views.vehicles,name='vehicles'),
     path('checkout/<int:package_id>/<int:vehicle_id>/', views.checkout, name='checkout'),
+    path('delete-package/<int:id>/', views.delete_package, name='delete_package'),
+
 
 
 

@@ -58,6 +58,7 @@ class Booking(models.Model):
 
 class Review(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    travel_package = models.ForeignKey(Package, on_delete=models.CASCADE)
     rating = models.IntegerField()
     comment = models.TextField()
     date_posted = models.DateTimeField(auto_now_add=True)

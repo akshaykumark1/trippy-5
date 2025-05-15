@@ -355,7 +355,7 @@ container text-center
         <div class="card-body text-center">
           <h5 class="card-title fw-bold">{{ i.title }}</h5>
           <p class="card-text text-muted">{{ i.destination.name }}</p>
-          <p class="card-text">{{ i.duration_days }} Days | ₹{{ i.price }}</p>
+          <p class="card-text">{{ i.duration_days }} Days </p>
           <a href="{% url 'viewpackagedetails' i.id %}" class="btn btn-outline-primary mt-2">View Details</a>
         </div>
       </div>
@@ -373,41 +373,33 @@ container text-center
 
 
 
-  <!-- Testimonials Section -->
-  <section class="py-5 bg-light ">
-    <div class="container text-center">
-      <h2 class="fw-bold mb-5">What Our Travelers Say</h2>
-  
-      <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-  
-          {% for Review in Reviews %}
-          <div class="carousel-item {% if forloop.first %}active{% endif %}">
-            <div class="row justify-content-center">
-              <div class="col-md-8">
-                <div class="bg-white p-5 shadow rounded">
-                  <p class="text-muted fst-italic fs-5">“{{ Review.message }}”</p>
-                  <h5 class="fw-bold mt-3">– {{ Review.name }}</h5>
-                </div>
+<section class=" py-5">
+  <div class="container">
+      <h2 class="text-center mb-5">Our Premium Vehicles</h2>
+      <div class="row g-4">
+
+          {% for vehicle in vehicles %}
+              <div class="col-md-4">
+                  <div class="card vehicle-card">
+                      <img src="{{ vehicle.image.url }}" class="card-img-top vehicle-img" alt="{{ vehicle.name }}">
+                      <div class="card-body">
+                          <h5 class="vehicle-name">{{ vehicle.name }}</h5>
+                          <div class="d-flex justify-content-between align-items-center">
+                              <span class="price">₹{{ vehicle.price }} per Trip</span>
+                          </div>
+                         
+                                                    </div>
+                  </div>
               </div>
-            </div>
-          </div>
+          {% empty %}
+              <div class="col-12">
+                  <p class="text-center">No vehicles available at the moment.</p>
+              </div>
           {% endfor %}
-  
-        </div>
-  
-        <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
+
       </div>
-  
-    </div>
-  </section>
+  </div>
+</section>
   
 
 

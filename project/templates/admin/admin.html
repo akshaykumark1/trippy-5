@@ -104,12 +104,8 @@
           <div class="d-flex justify-content-between align-items-center">
            <a href="{% url 'booking_list' %}"> <span class="card-title">Bookings</span></a>
             <div>
-              <button class="btn-action btn-add me-2">
-                <i class="bi bi-plus-circle-fill icon-space"></i>Add
-              </button>
-              <button class="btn-action btn-change">
-                <i class="bi bi-pencil-fill icon-space"></i>Change
-              </button>
+             
+             
             </div>
           </div>
         </div>
@@ -120,14 +116,14 @@
         <div class="card p-4 shadow-sm">
           <div class="d-flex justify-content-between align-items-center">
            <a href="{% url 'customer_list' %}"> <span class="card-title">Customers</span></a>
-            <div>
-              <button class="btn-action btn-add me-2">
+            <!-- <div>
+              <a class="btn-action btn-add me-2">
                 <i class="bi bi-plus-circle-fill icon-space"></i>Add
-              </button>
+              </a>
               <button class="btn-action btn-change">
                 <i class="bi bi-pencil-fill icon-space"></i>Change
               </button>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -138,19 +134,17 @@
           <div class="d-flex justify-content-between align-items-center">
             <a href="{% url 'package_list' %}"><span class="card-title">Packages</span></a>
             <div>
-              <button class="btn-action btn-add me-2">
+              <a class="btn-action btn-add me-2" href="add_package">
                 <i class="bi bi-plus-circle-fill icon-space"></i>Add
-              </button>
-              <button class="btn-action btn-change">
-                <i class="bi bi-pencil-fill icon-space"></i>Change
-              </button>
+              </a>
+
             </div>
           </div>
         </div>
       </div>
 
       <!-- Reviews Card -->
-      <div class="col-md-6 col-lg-4">
+      <!-- <div class="col-md-6 col-lg-4">
         <div class="card p-4 shadow-sm">
           <div class="d-flex justify-content-between align-items-center">
             <a href="{% url 'review_list' %}"><span class="card-title">Reviews</span></a>
@@ -164,21 +158,14 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- Vehicles Card -->
       <div class="col-md-6 col-lg-4">
         <div class="card p-4 shadow-sm">
           <div class="d-flex justify-content-between align-items-center">
-            <a href="{% url 'vehicle_list' %}"><span class="card-title">Vehicles</span></a>
-            <div>
-              <button class="btn-action btn-add me-2">
-                <i class="bi bi-plus-circle-fill icon-space"></i>Add
-              </button>
-              <button class="btn-action btn-change">
-                <i class="bi bi-pencil-fill icon-space"></i>Change
-              </button>
-            </div>
+            <a href="{% url 'vehicle_list1' %}"><span class="card-title">Vehicles</span></a>
+ 
           </div>
         </div>
       </div>
