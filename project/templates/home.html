@@ -319,27 +319,22 @@ container text-center
 
 <!-- Premium Banner Section -->
 <section class="banner">
-    <div class="container">
-      <div class="banner-text-item">
-        <div class="banner-heading mb-4">
-          <h1>Find your Next tour!</h1>
-          <h3>in 𝕥𝕣𝕚𝕡𝕡𝕚𝕗𝕪</h3>
-        </div>
-        <form class="form">
-          <input type="text" list="mylist" placeholder="Where would you like to go?">
-          <datalist id="mylist">
-            <option>London</option>
-            <option>Canada</option>
-            <option>Monaco</option>
-            <option>France</option>
-            <option>Japan</option>
-            <option>Switzerland</option>
-            <option>Seoul</option>
-          </datalist>
-        </form>
+  <div class="container">
+    <div class="banner-text-item">
+      <div class="banner-heading mb-4">
+        <h1>Find your Next tour!</h1>
+        <h3>in 𝕥𝕣𝕚𝕡𝕡𝕚𝕗𝕪</h3>
       </div>
+      <form  class="searchbar" method="GET" action="{% url 'sea' %}" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search y" name="q" required>
+
+        <button class="searchbtn" type="submit">
+            <i class='bx bx-search fs-4'></i>
+        </button>
+      </form>
     </div>
-  </section>
+  </div>
+</section>
 
 
 
@@ -384,9 +379,7 @@ container text-center
                       <img src="{{ vehicle.image.url }}" class="card-img-top vehicle-img" alt="{{ vehicle.name }}">
                       <div class="card-body">
                           <h5 class="vehicle-name">{{ vehicle.name }}</h5>
-                          <div class="d-flex justify-content-between align-items-center">
-                              <span class="price">₹{{ vehicle.price }} per Trip</span>
-                          </div>
+                         
                          
                                                     </div>
                   </div>

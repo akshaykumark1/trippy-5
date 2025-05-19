@@ -11,10 +11,24 @@ from django.conf import settings
 from django.contrib import messages
 from datetime import datetime
 import razorpay
+from django.db.models import Q
 
 
 
-      
+def search(request):
+    """
+    Search for packages based on the query parameter from the search form.
+    Searches in package title and description fields.
+    """
+    query = request.GET.get('q', '')
+    products= Package.objects.filter(title__icontains=query)
+    
+    context = {
+        'packages': products,
+        'query': query
+    }
+    
+    return render(request, 'search1.html', context)
 def signin(request):
     if request.user.is_authenticated:
         return redirect('home')
