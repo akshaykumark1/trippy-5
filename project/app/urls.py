@@ -35,7 +35,7 @@ urlpatterns = [
 
 
 
-
+    
     path('bookings/', views.booking_list, name='booking_list'),
     path('customers/', views.customer_list, name='customer_list'),
     path('packages/', views.package_list, name='package_list'),

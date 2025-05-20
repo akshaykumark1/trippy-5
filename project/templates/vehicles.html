@@ -20,8 +20,8 @@
 body {
     background: url("{% static 'images/bg.jpg' %}") no-repeat center center;
     background-size: cover;
-    font-family: 'Poppins', sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Outfit', sans-serif;
+     background-color: #f4f4f4;
 }
 
 .navbar {
@@ -219,6 +219,58 @@ body {
             background-color: transparent;
             color: #007bff;
         }
+
+
+.vehicle-card {
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.vehicle-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.vehicle-img {
+    height: 230px;
+    object-fit: cover;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.vehicle-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #222;
+}
+
+.vehicle-description {
+    color: #555;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.btn-gradient {
+    background: linear-gradient(to right, #ff6b6b, #5f27cd);
+    color: white;
+    border: none;
+    transition: 0.3s ease;
+}
+
+.btn-gradient:hover {
+    background: linear-gradient(to right, #5f27cd, #ff6b6b);
+    transform: translateY(-2px);
+    color: #fff;
+}
+
+.text-gradient {
+    background: linear-gradient(to right, #5f27cd, #ff6b6b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
     </style>
 </head>
 <body>
@@ -270,37 +322,37 @@ body {
             </div>
         </div>
     </nav>
-
-<section class="bg-light py-5">
+<section class="py-5" style="background: linear-gradient(to right, #f0f4ff, #ffffff);">
     <div class="container">
-        <h2 class="text-center mb-5">Our Premium Vehicles</h2>
-        <div class="row g-4">
-
+        <h2 class="text-center fw-bold mb-5 display-5 text-gradient">Our Premium Vehicles</h2>
+        <div class="row g-5">
             {% for vehicle in vehicles %}
-                <div class="col-md-4">
-                    <div class="card vehicle-card">
-                        <img src="{{ vehicle.image.url }}" class="card-img-top vehicle-img" alt="{{ vehicle.name }}">
-                        <div class="card-body">
-                            <h5 class="vehicle-name">{{ vehicle.name }}</h5>
-                            <p class="vehicle-description">{{ vehicle.Description|linebreaksbr }}</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="price">₹{{ vehicle.price }} per Trip</span>
-                            </div>
-                            <a href="{% url 'checkout' vehicle.package.id vehicle.id %}" class="btn btn-primary rounded-pill">
-                                Choose {{ vehicle.name }}
-                              </a>
-                                                      </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
+                    <div class="card vehicle-card shadow-lg h-100 border-0">
+                        <div class="position-relative">
+                            <img src="{{ vehicle.image.url }}" class="card-img-top vehicle-img rounded-top" alt="{{ vehicle.name }}">
+                            <span class="badge bg-gradient position-absolute top-0 start-0 m-3 px-3 py-2 shadow-sm">
+                                ₹{{ vehicle.price }} / Trip
+                            </span>
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="vehicle-name mb-2">{{ vehicle.name }}</h5>
+                            <p class="vehicle-description flex-grow-1">{{ vehicle.Description|linebreaksbr }}</p>
+                            <a href="{% url 'checkout' vehicle.package.id vehicle.id %}" class="btn btn-gradient btn-lg mt-3 w-100 rounded-pill">
+                                <i class="fas fa-car me-2"></i> Choose {{ vehicle.name }}
+                            </a>
+                        </div>
                     </div>
                 </div>
             {% empty %}
-                <div class="col-12">
-                    <p class="text-center">No vehicles available at the moment.</p>
+                <div class="col-12 text-center">
+                    <p class="fs-5 text-muted">No vehicles available at the moment.</p>
                 </div>
             {% endfor %}
-
         </div>
     </div>
 </section>
+
 
 
 

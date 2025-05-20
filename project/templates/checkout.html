@@ -245,9 +245,10 @@ body {
                 <p><strong>Vehicle Price:</strong> ₹{{ vehicle.price }}</p>
 
                 <div class="form-group mt-3">
-                    <label for="people"><strong>Number of People:</strong></label>
-                    <input type="number" id="people" name="people" class="form-control" min="1" value="1">
-                </div>
+       <label><strong>Number of People:</strong></label>
+    <input type="number" id="people" name="people" class="form-control" readonly>
+    </div>
+
                 
 
               
@@ -255,12 +256,13 @@ body {
                 <hr>
 
                 <h5>Total Price: ₹<span id="total-price">0</span></h5>
-                <form method="POST" action="">
+                <form method="POST" action="{% url 'create_booking' package.id  %}">
                     {% csrf_token %}
                     <input type="hidden" name="package_id" value="{{ package.id }}">
                     <input type="hidden" name="vehicle_id" value="{{ vehicle.id }}">
                     <input type="hidden" name="total_price" id="total_price_input" value="">
                     <input type="hidden" name="people_count" id="people_input" value="1">
+
                     <button type="submit" class="btn btn-success mt-3 w-100 rounded-pill">Confirm Booking</button>
                 </form>
                 
@@ -269,24 +271,31 @@ body {
 
     </div>
 </div>
-
 <script>
-    const pricePerHead = {{ package.price|default:0 }}
-    const vehiclePrice = {{ vehicle.price|default:0 }}
+    const pricePerHead = {{ package.price|default:0 }};
+    const vehiclePrice = {{ vehicle.price|default:0 }};
     const peopleInput = document.getElementById('people');
     const totalPriceElement = document.getElementById('total-price');
     const totalPriceInput = document.getElementById('total_price_input');
     const peopleCountInput = document.getElementById('people_input');
 
-    function calculateTotal() {
-        const people = parseInt(peopleInput.value);
-        const total = (people * pricePerHead) + vehiclePrice;
-        totalPriceElement.textContent = total;
-        totalPriceInput.value = total;
-        peopleCountInput.value = people;
+    function getRequiredPeopleCount(vehicleName) {
+        if (vehicleName.toLowerCase().includes('car')) return 7;
+        if (vehicleName.toLowerCase().includes('van')) return 22;
+        if (vehicleName.toLowerCase().includes('bus')) return 60;
+        return 1; // default fallback
     }
 
-    peopleInput.addEventListener('input', calculateTotal);
+    function calculateTotal() {
+        const requiredPeople = getRequiredPeopleCount("{{ vehicle.name }}");
+        peopleInput.value = requiredPeople;
+        peopleInput.readOnly = true; // prevent editing
+        const total = (requiredPeople * pricePerHead) + vehiclePrice;
+        totalPriceElement.textContent = total;
+        totalPriceInput.value = total;
+        peopleCountInput.value = requiredPeople;
+    }
+
     window.addEventListener('load', calculateTotal);
 </script>
 

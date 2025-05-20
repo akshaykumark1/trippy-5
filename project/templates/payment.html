@@ -1,36 +1,242 @@
+<!DOCTYPE html>
 {% load static %}
-
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card shadow-lg border-0 rounded-4">
-        <div class="card-body text-center">
-
-          <img src="{% static 'images/payment.svg' %}" alt="Payment" width="100" class="mb-4">
-
-          <h3 class="mb-3 text-primary">Confirm Your Payment</h3>
-          <p class="text-muted">Booking for: <strong>{{ booking.travel_package.title }}</strong></p>
-          <p>Total Amount: <strong>₹{{ booking.total_price }}</strong></p>
-
-          <form action="{% url 'payment_success' booking.id %}" method="POST">
-            {% csrf_token %}
-            <script 
-              src="https://checkout.razorpay.com/v1/checkout.js"
-              data-key="{{ razorpay_key }}"
-              data-amount="{{ amount }}"
-              data-currency="INR"
-              data-order_id="{{ order_id }}"
-              data-buttontext="Pay ₹{{ booking.total_price }} with Razorpay"
-              data-name="Trippify"
-              data-description="Booking Payment"
-              data-theme.color="#0d6efd">
-            </script>
-            <input type="hidden" name="booking_id" value="{{ booking.id }}">
-          </form>
-
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trippify - Payment Confirmation</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #584CF4;
+            --primary-hover: #4a40d4;
+            --secondary: #ff7a5c;
+            --dark: #333;
+            --light: #f8f9fa;
+            --border-radius: 16px;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .payment-card {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .payment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .payment-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+            padding: 2.5rem 1rem;
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+        
+        .payment-header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: scale(1.5);
+        }
+        
+        .payment-logo {
+            width: 80px;
+            height: 80px;
+            background-color: white;
+            border-radius: 50%;
+            padding: 15px;
+            margin: 0 auto 1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .payment-body {
+            padding: 2.5rem;
+        }
+        
+        .booking-details {
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .total-price {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .razorpay-payment-button {
+            background: var(--primary) !important;
+            border-color: var(--primary) !important;
+            border-radius: var(--border-radius) !important;
+            padding: 12px 24px !important;
+            font-size: 1.1rem !important;
+            font-weight: 500 !important;
+            transition: all 0.3s !important;
+            width: 100% !important;
+            box-shadow: 0 8px 15px rgba(88, 76, 244, 0.3) !important;
+        }
+        
+        .razorpay-payment-button:hover {
+            background: var(--primary-hover) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 12px 20px rgba(88, 76, 244, 0.4) !important;
+        }
+        
+        .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1.5rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .security-badge i {
+            margin-right: 0.5rem;
+            color: var(--primary);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 767px) {
+            .payment-header {
+                padding: 2rem 1rem;
+            }
+            
+            .payment-logo {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .payment-body {
+                padding: 1.5rem;
+            }
+            
+            .total-price {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8 col-sm-10">
+                <div class="payment-card" data-aos="fade-up">
+                    <div class="payment-header text-center">
+                        <div class="payment-logo">
+                            <img src="{% static 'images/payment.svg' %}" alt="Payment" width="50">
+                        </div>
+                        <h2 class="mb-1">Secure Payment</h2>
+                        <p class="mb-0 opacity-75">Complete your booking in seconds</p>
+                    </div>
+                    
+                    <div class="payment-body">
+                        <div class="booking-details" data-aos="fade-up" data-aos-delay="100">
+                            <h4 class="mb-3">Booking Summary</h4>
+                            
+                            <div class="detail-row">
+                                <span>Package</span>
+                                <span class="fw-bold">{{ booking.travel_package.title }}</span>
+                            </div>
+                            
+                            <div class="detail-row">
+                                <span>Booking ID</span>
+                                <span class="fw-bold">{{ booking.id }}</span>
+                            </div>
+                            
+                            <div class="detail-row">
+                                <span>Amount</span>
+                                <span class="total-price">₹{{ booking.total_price }}</span>
+                            </div>
+                        </div>
+                        
+                        <div data-aos="fade-up" data-aos-delay="200">
+                            <form action="{% url 'payment_success' booking.id %}" method="POST">
+                                {% csrf_token %}
+                                <script
+                                    src="https://checkout.razorpay.com/v1/checkout.js"
+                                    data-key="{{ razorpay_key }}"
+                                    data-amount="{{ amount }}"
+                                    data-currency="INR"
+                                    data-order_id="{{ order_id }}"
+                                    data-buttontext="Pay ₹{{ booking.total_price }} Securely"
+                                    data-name="Trippify"
+                                    data-description="Premium Travel Experience"
+                                    data-image="{% static 'images/logo.png' %}"
+                                    data-prefill.name="{{ request.user.get_full_name }}"
+                                    data-prefill.email="{{ request.user.email }}"
+                                    data-theme.color="#584CF4">
+                                </script>
+                                <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                            </form>
+                            
+                            <div class="security-badge mt-4">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Your payment is secured with end-to-end encryption</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-</div>
-
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true
+            });
+        });
+    </script>
+</body>
+</html>

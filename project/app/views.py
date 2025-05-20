@@ -413,16 +413,27 @@ def delete_package(request, id):
     return redirect('admin')  # change 'packages' to your package list view name
 
 
-
 @login_required
 def checkout(request, package_id, vehicle_id):
     package = get_object_or_404(Package, id=package_id)
     vehicle = get_object_or_404(Vehicle, id=vehicle_id)
     customer = get_object_or_404(Customer, user=request.user)
 
+    vehicle_name = vehicle.name.lower()
+    required_people = 1
+    if 'car' in vehicle_name:
+        required_people = 7
+    elif 'van' in vehicle_name:
+        required_people = 22
+    elif 'bus' in vehicle_name:
+        required_people = 60
+
     if request.method == 'POST':
         people = int(request.POST.get('people_count'))
         total_price = float(request.POST.get('total_price'))
+
+        if people != required_people:
+            return HttpResponse("Invalid number of people selected for this vehicle.", status=400)
 
         booking = Booking.objects.create(
             customer=customer,
@@ -435,6 +446,7 @@ def checkout(request, package_id, vehicle_id):
         return redirect('payment_success', booking_id=booking.id)
 
     return render(request, 'checkout.html', {'package': package, 'vehicle': vehicle})
+
 
 def confirm_booking(request):
     if request.method == 'POST':
@@ -466,7 +478,8 @@ def create_booking(request, package_id):
     customer = get_object_or_404(Customer, user=request.user)
 
     if request.method == 'POST':
-        persons = int(request.POST.get('number_of_people'))
+        persons = int(request.POST.get('people_count'))
+
 
         # Example price logic (you can adjust this)
         base_price_per_person = 1000  # or use dynamic pricing if needed
